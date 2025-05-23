@@ -67,7 +67,7 @@ serve(async (req: Request): Promise<Response> => {
 
   const openaiJson = await openaiResponse.json();
   const baseResponse = openaiJson?.choices?.[0]?.message?.content || "No response from OpenAI";
-  const result = `${baseResponse}\n\nMore info: ${SYLLABUS_LINK}`;
+  const result = `${baseResponse}\n\nLink to course web page: ${SYLLABUS_LINK}`;
 
   let qualtricsStatus = "Qualtrics not called";
 
