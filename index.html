@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>3210 Syllabus Query Page</title>
+	<!-- Include Lato font -->
+	<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&amp;display=swap" rel="stylesheet" />
+	<style type="text/css">body {
+            font-family: 'Lato', sans-serif;
+            font-size: 17px;
+            color: #202122;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2, h3 {
+            font-weight: 700;
+            color: #202122;
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        textarea, button {
+            font-size: 17px;
+            font-family: 'Lato', sans-serif;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: #006fbf; /* Brightspace blue */
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 17px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #005a9e; /* Darker blue on hover */
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        #response {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 4px;
+            min-height: 100px;
+            background-color: #f9f9f9;
+            white-space: pre-wrap;
+        }
+
+        /* Spinner styling */
+        .spinner {
+            display: none;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #202122;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            display: none;
+            font-size: 15px;
+            color: #666;
+            margin-top: 10px;
+        }
+	</style>
+</head>
+<body>
+<h2>3210 Syllabus Query Page</h2>
+
+<form id="queryForm"><label for="query">Your Question:</label><textarea id="query" name="query" required="" rows="4"></textarea><button type="submit">Submit</button>
+
+<div class="spinner" id="spinner"></div>
+</form>
+
+<h3>Response:</h3>
+
+<div id="response"></div>
+
+<div class="loading-text" id="loadingText">Querying ChatGPT, please wait...</div>
+<script>
+        document.getElementById('queryForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const responseDiv = document.getElementById('response');
+            const spinner = document.getElementById('spinner');
+            const loadingText = document.getElementById('loadingText');
+
+            // Clear previous response and show loading indicator
+            responseDiv.innerText = '';
+            spinner.style.display = 'inline-block';
+            loadingText.style.display = 'block';
+
+            try {
+                // Make the POST request to the PHP script
+                const response = await fetch('chatgpt_query.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                // Parse and display the response
+                const data = await response.text();
+                responseDiv.innerText = data;
+            } catch (error) {
+                // Display any errors that occur
+                responseDiv.innerText = 'Error: ' + error.message;
+            } finally {
+                // Hide the loading indicator once the response is received
+                spinner.style.display = 'none';
+                loadingText.style.display = 'none';
+            }
+        });
+    </script></body>
+</html>

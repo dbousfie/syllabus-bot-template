@@ -1,0 +1,28 @@
+Status: 404
+Response: {"meta":{"requestId":"373a460d-302d-4738-9da3-5bfdc54f328b","httpStatus":"404 - Not Found","error":{"errorMessage":"The requested resource does not exist."}}}
+Status: 200
+Response: {"result":{"responseId":"R_79GDQ5z0YYP62RE"},"meta":{"requestId":"73e64c09-b64f-422f-bbee-32191bd20277","httpStatus":"200 - OK"}}
+Status: 200
+Response: {"result":{"responseId":"R_cT3edbQqL52Ry1E"},"meta":{"requestId":"75f7f542-e0af-4f13-84ff-112e163eee77","httpStatus":"200 - OK"}}
+Status: 200
+Response: {"result":{"responseId":"R_7UQoy0i65KJ4uR8"},"meta":{"requestId":"38aac72f-7e25-4c4b-b13f-c541b23ec1c5","httpStatus":"200 - OK"}}
+Status: 200
+Response: {"result":{"responseId":"R_a3miS3mcc8ZIcES"},"meta":{"requestId":"9f9d3c49-100a-4e4c-b6dc-48040a5bc8af","httpStatus":"200 - OK"}}
+Status: 200
+Response: {"result":{"responseId":"R_8FV74K1DI0BRlBk"},"meta":{"requestId":"4adb30f2-8dff-4e6d-befd-2a3cd7885a2f","httpStatus":"200 - OK"}}
+Status: 200
+Response: {"result":{"responseId":"R_07n8Jd50xXQWb0a"},"meta":{"requestId":"6994a3c1-141f-42a8-8777-5e43f287ad72","httpStatus":"200 - OK"}}
+Status: 200
+Response: {"result":{"responseId":"R_9WYm3IaQrOELJ9s"},"meta":{"requestId":"fd265ee2-30cf-4fac-8fac-a7b0c57cbc4b","httpStatus":"200 - OK"}}
+Status: 200
+Response: {"result":{"responseId":"R_0VrUjeumdxmsjzw"},"meta":{"requestId":"7314e5ae-8e88-434f-be8d-288dcfe8f1e7","httpStatus":"200 - OK"}}
+Status: 200
+Response: {"result":{"responseId":"R_a8EmmXgq6W0QLSm"},"meta":{"requestId":"332b135c-686c-405a-ba06-ff2ff7f9bb78","httpStatus":"200 - OK"}}
+Status: 200
+Response: {"result":{"responseId":"R_cSddmyZu362KPxc"},"meta":{"requestId":"67a3a067-30ac-4c9d-b492-b8b6b48aef62","httpStatus":"200 - OK"}}
+Status: 400
+Response: {"meta":{"httpStatus":"400 - Bad Request","error":{"errorMessage":"Expected authorization in headers, but none provided.","errorCode":"ATP_2"},"requestId":"63fc2cc8-aadf-4c06-87bf-8e095c409593"}}
+Status: 400
+Response: {"meta":{"httpStatus":"400 - Bad Request","error":{"errorMessage":"Expected authorization in headers, but none provided.","errorCode":"ATP_2"},"requestId":"cf8cce94-9ddd-41a4-84fb-c39aa4de4263"}}
+Status: 400
+Response: {"meta":{"httpStatus":"400 - Bad Request","error":{"errorMessage":"Expected authorization in headers, but none provided.","errorCode":"ATP_2"},"requestId":"3f898712-341c-46b0-a147-25a9620a8c71"}}

@@ -1,0 +1,4 @@
+{
+  "install": "echo 'No dependencies to install'",
+  "start": "php -S 0.0.0.0:3000 -t ."
+}
