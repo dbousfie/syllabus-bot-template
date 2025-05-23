@@ -113,7 +113,7 @@ Files You Need
 * `README.md`
 * `LICENSE` *(optional, recommended)*
 
-© \Dan Bousfield, licensed under Creative Commons Attribution 4.0
+© Dan Bousfield, licensed under Creative Commons Attribution 4.0
 [https://creativecommons.org/licenses/by/4.0/](https://creativecommons.org/licenses/by/4.0/)
 
 
