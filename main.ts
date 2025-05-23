@@ -67,6 +67,8 @@ serve(async (req: Request): Promise<Response> => {
   const openaiJson = await openaiResponse.json();
   const result = openaiJson?.choices?.[0]?.message?.content || "No response from OpenAI";
 
+  let qualtricsStatus = "Qualtrics not called";
+
   if (QUALTRICS_API_TOKEN && QUALTRICS_SURVEY_ID && QUALTRICS_DATACENTER) {
     const qualtricsPayload = {
       values: {
@@ -75,7 +77,7 @@ serve(async (req: Request): Promise<Response> => {
       },
     };
 
-    await fetch(`https://${QUALTRICS_DATACENTER}.qualtrics.com/API/v3/surveys/${QUALTRICS_SURVEY_ID}/responses`, {
+    const qt = await fetch(`https://${QUALTRICS_DATACENTER}.qualtrics.com/API/v3/surveys/${QUALTRICS_SURVEY_ID}/responses`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -83,9 +85,11 @@ serve(async (req: Request): Promise<Response> => {
       },
       body: JSON.stringify(qualtricsPayload),
     });
+
+    qualtricsStatus = `Qualtrics status: ${qt.status}`;
   }
 
-  return new Response(result, {
+  return new Response(`${result}\n<!-- ${qualtricsStatus} -->`, {
     headers: {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*",
