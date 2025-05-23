@@ -4,6 +4,7 @@ const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
 const QUALTRICS_API_TOKEN = Deno.env.get("QUALTRICS_API_TOKEN");
 const QUALTRICS_SURVEY_ID = Deno.env.get("QUALTRICS_SURVEY_ID");
 const QUALTRICS_DATACENTER = Deno.env.get("QUALTRICS_DATACENTER");
+const SYLLABUS_LINK = Deno.env.get("SYLLABUS_LINK") || "";
 
 serve(async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
@@ -65,7 +66,8 @@ serve(async (req: Request): Promise<Response> => {
   });
 
   const openaiJson = await openaiResponse.json();
-  const result = openaiJson?.choices?.[0]?.message?.content || "No response from OpenAI";
+  const baseResponse = openaiJson?.choices?.[0]?.message?.content || "No response from OpenAI";
+  const result = `${baseResponse}\n\nMore info: ${SYLLABUS_LINK}`;
 
   let qualtricsStatus = "Qualtrics not called";
 
