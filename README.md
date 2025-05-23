@@ -1,7 +1,3 @@
-Here’s the full, corrected `README.md` with the updated syllabus link explanation and consistent numbering.
-
----
-
 Syllabus Bot Template
 A copyable, modular bot for answering syllabus questions using OpenAI.
 Designed to embed cleanly into Brightspace, with optional Qualtrics logging.
