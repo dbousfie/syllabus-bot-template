@@ -1,10 +1,11 @@
-// trigger redeploy
-
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 
 const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+const QUALTRICS_API_TOKEN = Deno.env.get("QUALTRICS_API_TOKEN");
+const QUALTRICS_SURVEY_ID = Deno.env.get("QUALTRICS_SURVEY_ID");
+const QUALTRICS_DATACENTER = Deno.env.get("QUALTRICS_DATACENTER");
 
-const handler = async (req: Request): Promise<Response> => {
+serve(async (req: Request): Promise<Response> => {
   if (req.method !== "POST") {
     return new Response("Method Not Allowed", { status: 405 });
   }
@@ -40,7 +41,7 @@ const handler = async (req: Request): Promise<Response> => {
     },
   ];
 
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+  const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -52,14 +53,29 @@ const handler = async (req: Request): Promise<Response> => {
     }),
   });
 
-  const json = await response.json();
+  const openaiJson = await openaiResponse.json();
+  const result = openaiJson?.choices?.[0]?.message?.content || "No response from OpenAI";
 
-  const result =
-    json?.choices?.[0]?.message?.content || "No response from OpenAI";
+  // Send to Qualtrics if variables are set
+  if (QUALTRICS_API_TOKEN && QUALTRICS_SURVEY_ID && QUALTRICS_DATACENTER) {
+    const qualtricsPayload = {
+      values: {
+        responseText: result,
+        queryText: body.query,
+      },
+    };
+
+    await fetch(`https://${QUALTRICS_DATACENTER}.qualtrics.com/API/v3/surveys/${QUALTRICS_SURVEY_ID}/responses`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-TOKEN": QUALTRICS_API_TOKEN,
+      },
+      body: JSON.stringify(qualtricsPayload),
+    });
+  }
 
   return new Response(result, {
     headers: { "Content-Type": "text/plain" },
   });
-};
-
-serve(handler);
+});
