@@ -1,5 +1,6 @@
-© Dan Bousfield, licensed under CC BY 4.0
-https://creativecommons.org/licenses/by/4.0/
+Here’s the full, corrected `README.md` with the updated syllabus link explanation and consistent numbering.
+
+---
 
 Syllabus Bot Template
 A copyable, modular bot for answering syllabus questions using OpenAI.
@@ -14,71 +15,105 @@ What It Does
 
 How to Use
 
-1. Fork This Repo
-   Click Fork (top-right) on GitHub to make your own copy.
+**1. Fork This Repo**
+Click Fork (top-right) on GitHub to make your own copy.
 
-2. Replace the Syllabus
-   Edit syllabus.txt with your course content.
+**2. Replace the Syllabus**
+Edit `syllabus.txt` with your course content.
 
-3. Customize the Interface (Optional)
+You do **not** need to include a syllabus link in the text itself.
+Instead, add the course web page URL as an environment variable in Deno:
 
-* index.html is the standalone public bot page
-* brightspace.html is for embedding in Brightspace via iframe
+```
+SYLLABUS_LINK = https://your.link.here
+```
+
+The bot will automatically append this at the end of each response:
+
+```
+There may be errors in my responses; always refer to the course web page: https://your.link.here
+```
+
+**3. Customize the Interface (Optional)**
+
+* `index.html` is the standalone public bot page
+* `brightspace.html` is for embedding in Brightspace via iframe
 * You can change headers, labels, or placeholders as needed
 
-4. Deploy Backend to Deno
+**4. Deploy Backend to Deno**
 
 * Go to [https://dash.deno.com](https://dash.deno.com)
 * Sign in with GitHub
 * Click "Deploy from GitHub"
-* Set main.ts as the entry point
+* Set `main.ts` as the entry point
 * Add environment variables under "Settings" → "Environment Variables":
 
-OPENAI\_API\_KEY = your key
-QUALTRICS\_API\_TOKEN = optional
-QUALTRICS\_SURVEY\_ID = optional
-QUALTRICS\_DATACENTER = optional (e.g., uwo.eu)
+```
+OPENAI_API_KEY         = your key  
+QUALTRICS_API_TOKEN    = optional  
+QUALTRICS_SURVEY_ID    = optional  
+QUALTRICS_DATACENTER   = optional (e.g., uwo.eu)  
+SYLLABUS_LINK          = required (Brightspace or course page link)
+```
 
 If Qualtrics values are missing, the bot still works — it just skips logging.
 
-**Required Setup in Qualtrics** (only if using logging):
+**Required Setup in Qualtrics (optional):**
 In your Qualtrics survey:
 
 * Go to Survey Flow
 * Click Add a New Element → Embedded Data
 * Add the following exact variable names:
 
-responseText
-queryText
+```
+responseText  
+queryText  
+```
 
-Click Apply and Publish the survey. These fields store the user’s query and the AI response.
+Click Apply and Publish the survey.
 
-5. Deploy Frontend to GitHub Pages
+**5. Deploy Frontend to GitHub Pages**
 
 * Go to your repo → Settings → Pages
 * Set source to Branch: main, Folder: root
 * Save
-* Visit: [https://your-username.github.io/your-repo-name/](https://your-username.github.io/your-repo-name/)
+* Visit:
+
+  ```
+  https://your-username.github.io/your-repo-name/
+  ```
 
 This is your public bot URL.
 
-Brightspace Integration
-Use brightspace.html as an iframe loader.
-Update its src to match your GitHub Pages link.
-Paste the brightspace.html content into Brightspace.
+**6. Update Brightspace Embed**
+In `brightspace.html`, change the `src` inside the iframe to your GitHub Pages URL:
+
+```html
+<iframe src="https://your-username.github.io/your-bot-repo/" width="100%" height="800px" style="border: none;"></iframe>
+```
+
+Paste that file into Brightspace as a content item or custom widget.
+
+---
 
 Notes
 
 * The backend handles CORS automatically
-* If Qualtrics logging is enabled, response includes a hidden HTML comment like:
+* If Qualtrics logging is enabled, the response includes a hidden HTML comment like:
+  `<!-- Qualtrics status: 200 -->`
 
-<!-- Qualtrics status: 200 -->
+---
 
 Files You Need
 
-* index.html
-* brightspace.html
-* syllabus.txt
-* main.ts
-* README.md (this file)
+* `index.html`
+* `brightspace.html`
+* `syllabus.txt`
+* `main.ts`
+* `README.md`
+* `LICENSE` *(optional, recommended)*
+
+© \Dan Bousfield, licensed under Creative Commons Attribution 4.0
+[https://creativecommons.org/licenses/by/4.0/](https://creativecommons.org/licenses/by/4.0/)
+
 
