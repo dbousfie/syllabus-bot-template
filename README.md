@@ -38,6 +38,18 @@ QUALTRICS\_DATACENTER = optional (e.g., uwo.eu)
 
 If Qualtrics values are missing, the bot still works — it just skips logging.
 
+**Required Setup in Qualtrics** (only if using logging):
+In your Qualtrics survey:
+
+* Go to Survey Flow
+* Click Add a New Element → Embedded Data
+* Add the following exact variable names:
+
+responseText
+queryText
+
+Click Apply and Publish the survey. These fields store the user’s query and the AI response.
+
 5. Deploy Frontend to GitHub Pages
 
 * Go to your repo → Settings → Pages
@@ -65,6 +77,5 @@ Files You Need
 * brightspace.html
 * syllabus.txt
 * main.ts
-* LICENSE (optional)
-* qualtricsreadme.md (optional, can be merged into this README)
+* README.md (this file)
 
