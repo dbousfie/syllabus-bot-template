@@ -6,6 +6,17 @@ const QUALTRICS_SURVEY_ID = Deno.env.get("QUALTRICS_SURVEY_ID");
 const QUALTRICS_DATACENTER = Deno.env.get("QUALTRICS_DATACENTER");
 
 serve(async (req: Request): Promise<Response> => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    });
+  }
+
   if (req.method !== "POST") {
     return new Response("Method Not Allowed", { status: 405 });
   }
@@ -56,7 +67,6 @@ serve(async (req: Request): Promise<Response> => {
   const openaiJson = await openaiResponse.json();
   const result = openaiJson?.choices?.[0]?.message?.content || "No response from OpenAI";
 
-  // Send to Qualtrics if variables are set
   if (QUALTRICS_API_TOKEN && QUALTRICS_SURVEY_ID && QUALTRICS_DATACENTER) {
     const qualtricsPayload = {
       values: {
@@ -76,6 +86,9 @@ serve(async (req: Request): Promise<Response> => {
   }
 
   return new Response(result, {
-    headers: { "Content-Type": "text/plain" },
+    headers: {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*",
+    },
   });
 });
