@@ -1,3 +1,6 @@
+© Dan Bousfield, licensed under CC BY 4.0
+https://creativecommons.org/licenses/by/4.0/
+
 Syllabus Bot Template
 A copyable, modular bot for answering syllabus questions using OpenAI.
 Designed to embed cleanly into Brightspace, with optional Qualtrics logging.
