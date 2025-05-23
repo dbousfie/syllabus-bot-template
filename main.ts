@@ -41,7 +41,8 @@ serve(async (req: Request): Promise<Response> => {
     {
       role: "system",
       content:
-        "You are an accurate assistant. Always include a source URL if possible. End with: 'there may be errors in my responses; always refer to the course web page.'",
+        "You are an accurate assistant. Always include a source URL if possible."
+
     },
     {
       role: "system",
@@ -67,7 +68,7 @@ serve(async (req: Request): Promise<Response> => {
 
   const openaiJson = await openaiResponse.json();
   const baseResponse = openaiJson?.choices?.[0]?.message?.content || "No response from OpenAI";
-  const result = `${baseResponse}\n\nLink to course web page: ${SYLLABUS_LINK}`;
+  const result = `${baseResponse}\n\nThere may be errors in my responses; always refer to the course web page: ${SYLLABUS_LINK}`;
 
   let qualtricsStatus = "Qualtrics not called";
 
