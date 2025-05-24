@@ -81,16 +81,18 @@ Click Apply and Publish the survey.
 
 This is your public bot URL.
 
-**6. Update Brightspace Embed**
-In `brightspace.html`, change the `src` inside the iframe to your GitHub Pages URL:
+6. Add to Brightspace
 
-```html
-<iframe src="https://your-username.github.io/your-bot-repo/" width="100%" height="800px" style="border: none;"></iframe>
-```
+Use the included brightspace.html file. It is styled to match Brightspace’s interface and loads your bot using an iframe.
 
-Paste that file into Brightspace as a content item or custom widget.
+You only need to change the src attribute in the iframe:
 
----
+html
+Copy
+Edit
+<iframe src="https://yourusername.github.io/your-bot-repo/" width="100%" height="800px" style="border: none;"></iframe>
+Once updated, paste the entire contents of brightspace.html into a Brightspace HTML content item or widget.
+
 
 Notes
 
