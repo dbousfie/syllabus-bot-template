@@ -1,106 +1,97 @@
 Syllabus Bot Template
-A copyable, modular bot for answering syllabus questions using OpenAI.
-Designed to embed cleanly into Brightspace, with optional Qualtrics logging.
+A modular, copyable bot for answering course or assignment-related questions using OpenAI. Designed to embed into Brightspace and optionally log responses to Qualtrics.
 
 What It Does
 
-* Accepts free-text questions
-* Uses OpenAI to generate responses from your syllabus.txt
-* Optionally logs questions and responses to a Qualtrics survey
-* Can be linked or embedded via iframe in Brightspace
+* Accepts free-text questions 
+* Uses OpenAI to generate responses based on syllabus.txt
+* Optionally logs responses to a Qualtrics survey
+* Can be embedded in Brightspace or hosted via GitHub Pages
 
 How to Use
 
-**1. Fork This Repo**
-Click Fork (top-right) on GitHub to make your own copy.
+1. Create Your Own Copy
 
-**2. Replace the Syllabus**
-Edit `syllabus.txt` with a text verson your course content. This sent along with the student question during each request.
+* Go to [https://github.com/dbousfie/syllabus-bot-template]
+* Click **Use this template**
+* Name your new repo (e.g., `syllabus-bot-3210`, `paragraph-marker`)
 
-**3. Customize the Interface (Optional)**
+2. Replace the Syllabus Content
 
-* `index.html` is the standalone public bot page
-* `brightspace.html` is for embedding in Brightspace via iframe
-* You can change headers, labels, or placeholders as needed
+* Open `syllabus.txt`
+* Replace its contents with your course material or grading criteria
+* This file is sent with every query to provide context to the AI
 
-**4. Deploy Backend to Deno**
+3. Deploy Backend to Deno
 
-* Go to [https://dash.deno.com](https://dash.deno.com)
-* Sign in with GitHub
-* Click "Deploy from GitHub"
-* Set `main.ts` as the entry point
-* Add environment variables under "Settings" → "Environment Variables":
+* Go to [https://dash.deno.com]
+* Click **+ New Project** → **Import from GitHub**
+* Select your new repo
+* Set **entry point** to: `main.ts`
+* Name the project (this determines the public URL)
+* Set **production branch** to: `main`
+* Click **Create Project**
 
-```
-OPENAI_API_KEY         = your key  
-QUALTRICS_API_TOKEN    = optional  
-QUALTRICS_SURVEY_ID    = optional  
-QUALTRICS_DATACENTER   = optional (e.g., uwo.eu)  
-SYLLABUS_LINK          = required (Brightspace or course page link)
-```
-The syllabus link is used by the bot to append each response:
+4. Add Environment Variables
+   In the Deno project Settings → Environment Variables, add:
 
 ```
-There may be errors in my responses; always refer to the course web page: https://your.link.here
+OPENAI_API_KEY         = your OpenAI API key
+SYLLABUS_LINK          = a public link to the syllabus or course webpage
+QUALTRICS_API_TOKEN    = (optional)
+QUALTRICS_SURVEY_ID    = (optional)
+QUALTRICS_DATACENTER   = (optional, e.g., uwo.eu)
 ```
 
-If Qualtrics values are missing, the bot still works — it just skips logging.
+These values are used by the backend to query OpenAI and optionally log responses.
 
-**Required Setup in Qualtrics (optional):**
-In your Qualtrics survey:
+5. Update the Frontend (index.html)
+   Open `index.html` and update this line:
 
-* Go to Survey Flow
-* Click Add a New Element → Embedded Data
-* Add the following exact variable names:
-
-```
-responseText  
-queryText  
+```js
+fetch("https://your-bot-name.deno.dev/", {
 ```
 
-Click Apply and Publish the survey.
+Replace the placeholder with the URL from your deployed Deno backend (e.g., `https://paragraph-marker.deno.dev/`).
 
-**5. Deploy Frontend to GitHub Pages**
+This is the only required change to link your frontend to your backend.
 
-* Go to your repo → Settings → Pages
-* Set source to Branch: main, Folder: root
-* Save
-* Visit:
+6. Deploy GitHub Pages (Frontend Hosting)
 
-  ```
-  https://your-username.github.io/your-repo-name/
-  ```
+* Go to your new GitHub repo → **Settings → Pages**
+* Set **Branch** to `main`, **Folder** to `/ (root)`
+* Click **Save**
+* GitHub will display a live URL: `https://yourusername.github.io/yourbot/`
 
-This is your public bot URL.
+7. (Optional) Use brightspace.html for LMS Embedding
 
-6. Add to Brightspace
-
-Use the included brightspace.html file. It is styled to match Brightspace’s interface and loads your bot using an iframe.
-
-You only need to change the src attribute in the iframe:
-
-<iframe src="https://yourusername.github.io/your-bot-repo/" width="100%" height="800px" style="border: none;"></iframe>
-
-Once updated, paste the entire contents of brightspace.html into a Brightspace HTML content item or widget.
-
+* Copy `brightspace.html` into Brightspace as an HTML content item or widget
+* You can also style it using Brightspace's Lato font or CSS styles
 
 Notes
 
-* Brightspace loads the bot using an iframe or HTML form. For the browser to allow communication between the bot frontend and the backend (on Deno), the server must explicitly say: “It’s okay to receive requests from another domain.” This is called Cross-Origin Resource Sharing (CORS).
-* If Qualtrics logging is enabled, the response includes a hidden HTML comment like:
-  `<!-- Qualtrics status: 200 -->`
+* Brightspace loads bots in an iframe — CORS headers are handled automatically
+* Each deployed bot has its own backend; the fetch URL must match
 
----
+Qualtrics Logging Setup (Optional)
+If using Qualtrics, make sure your survey contains embedded data fields:
 
-Files You Need
+```
+responseText
+queryText
+```
 
-* `index.html`
-* `brightspace.html`
-* `syllabus.txt`
-* `main.ts`
-* `README.md`
+These will be populated by the bot. Responses will include a hidden HTML comment like:
+`<!-- Qualtrics status: 200 -->`
 
-© Dan Bousfield, licensed under Creative Commons Attribution 4.0
+Files in This Repo
+
+* `index.html` - Main public interface
+* `brightspace.html` - LMS-friendly iframe wrapper
+* `main.ts` - Backend Deno script
+* `syllabus.txt` - Syllabus or grading criteria context
+* `README.md` - This file
+
+License
+© Dan Bousfield. Licensed under Creative Commons Attribution 4.0
 [https://creativecommons.org/licenses/by/4.0/](https://creativecommons.org/licenses/by/4.0/)
-
-
