@@ -107,7 +107,6 @@ Files You Need
 * `syllabus.txt`
 * `main.ts`
 * `README.md`
-* `LICENSE` *(optional, recommended)*
 
 © Dan Bousfield, licensed under Creative Commons Attribution 4.0
 [https://creativecommons.org/licenses/by/4.0/](https://creativecommons.org/licenses/by/4.0/)
