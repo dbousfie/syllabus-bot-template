@@ -87,10 +87,8 @@ Use the included brightspace.html file. It is styled to match Brightspace’s in
 
 You only need to change the src attribute in the iframe:
 
-html
-Copy
-Edit
 <iframe src="https://yourusername.github.io/your-bot-repo/" width="100%" height="800px" style="border: none;"></iframe>
+
 Once updated, paste the entire contents of brightspace.html into a Brightspace HTML content item or widget.
 
 
