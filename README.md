@@ -94,7 +94,7 @@ Once updated, paste the entire contents of brightspace.html into a Brightspace H
 
 Notes
 
-* The backend handles CORS automatically
+* Brightspace loads the bot using an iframe or HTML form. For the browser to allow communication between the bot frontend and the backend (on Deno), the server must explicitly say: “It’s okay to receive requests from another domain.” This is called Cross-Origin Resource Sharing (CORS).
 * If Qualtrics logging is enabled, the response includes a hidden HTML comment like:
   `<!-- Qualtrics status: 200 -->`
 
