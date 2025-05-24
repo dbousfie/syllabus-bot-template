@@ -15,20 +15,7 @@ How to Use
 Click Fork (top-right) on GitHub to make your own copy.
 
 **2. Replace the Syllabus**
-Edit `syllabus.txt` with your course content.
-
-You do **not** need to include a syllabus link in the text itself.
-Instead, add the course web page URL as an environment variable in Deno:
-
-```
-SYLLABUS_LINK = https://your.link.here
-```
-
-The bot will automatically append this at the end of each response:
-
-```
-There may be errors in my responses; always refer to the course web page: https://your.link.here
-```
+Edit `syllabus.txt` with a text verson your course content. This sent along with the student question during each request.
 
 **3. Customize the Interface (Optional)**
 
@@ -50,6 +37,11 @@ QUALTRICS_API_TOKEN    = optional
 QUALTRICS_SURVEY_ID    = optional  
 QUALTRICS_DATACENTER   = optional (e.g., uwo.eu)  
 SYLLABUS_LINK          = required (Brightspace or course page link)
+```
+The syllabus link is used by the bot to append each response:
+
+```
+There may be errors in my responses; always refer to the course web page: https://your.link.here
 ```
 
 If Qualtrics values are missing, the bot still works — it just skips logging.
