@@ -24,7 +24,7 @@ How to Use
 
 3. Deploy Backend to Deno
 
-* Go to [https://dash.deno.com]
+* Go to [https://dash.deno.com] and sign up or log in using your GitHub account. This is required so Deno can access your repository and deploy from it directly.
 * Click **+ New Project** → **Import from GitHub**
 * Select your new repo
 * Set **entry point** to: `main.ts`
