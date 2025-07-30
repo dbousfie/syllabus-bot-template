@@ -33,7 +33,7 @@ serve(async (req: Request): Promise<Response> => {
     return new Response("Missing OpenAI API key", { status: 500 });
   }
 
-  const syllabus = await Deno.readTextFile("syllabus.txt").catch(() =>
+  const syllabus = await Deno.readTextFile("syllabus.md").catch(() =>
     "Error loading syllabus."
   );
 
@@ -46,7 +46,7 @@ serve(async (req: Request): Promise<Response> => {
     },
     {
       role: "system",
-      content: `Here is important context from syllabus.txt:\n${syllabus}`,
+      content: `Here is important context from syllabus.md:\n${syllabus}`,
     },
     {
       role: "user",
