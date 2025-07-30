@@ -18,7 +18,7 @@ How to Use
 
 2. Replace the Syllabus Content
 
-* Open `syllabus.txt`
+* Open `syllabus.md`
 * Replace its contents with your course material or grading criteria
 * This file is sent with every query to provide context to the AI
 
