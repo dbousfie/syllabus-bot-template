@@ -6,6 +6,22 @@ const QUALTRICS_SURVEY_ID = Deno.env.get("QUALTRICS_SURVEY_ID");
 const QUALTRICS_DATACENTER = Deno.env.get("QUALTRICS_DATACENTER");
 const SYLLABUS_LINK = Deno.env.get("SYLLABUS_LINK") || "";
 
+// easy knobs to turn
+const MAX_QUERY_LENGTH = 40000;       // allow long essays; trim pathological inputs
+const MAX_RESPONSE_TOKENS = 1500;     // cap model output length
+const MAX_REQS_PER_MINUTE = 60;       // per-IP rate limit
+
+// per-IP sliding window limiter (1 minute)
+const hits = new Map<string, number[]>();
+function limited(req: Request) {
+  const ip = req.headers.get("x-forwarded-for") ?? "x";
+  const now = Date.now();
+  const arr = (hits.get(ip) || []).filter(t => now - t < 60_000);
+  arr.push(now);
+  hits.set(ip, arr);
+  return arr.length > MAX_REQS_PER_MINUTE;
+}
+
 serve(async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, {
@@ -15,6 +31,13 @@ serve(async (req: Request): Promise<Response> => {
         "Access-Control-Allow-Methods": "POST, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type",
       },
+    });
+  }
+
+  if (limited(req)) {
+    return new Response("Too many requests, please try again in a minute.", {
+      status: 429,
+      headers: { "Access-Control-Allow-Origin": "*" },
     });
   }
 
@@ -33,6 +56,12 @@ serve(async (req: Request): Promise<Response> => {
     return new Response("Missing OpenAI API key", { status: 500 });
   }
 
+  // enforce query length limit
+  let query = (body.query || "").trim();
+  if (query.length > MAX_QUERY_LENGTH) {
+    query = query.slice(0, MAX_QUERY_LENGTH);
+  }
+
   const syllabus = await Deno.readTextFile("syllabus.md").catch(() =>
     "Error loading syllabus."
   );
@@ -40,9 +69,7 @@ serve(async (req: Request): Promise<Response> => {
   const messages = [
     {
       role: "system",
-      content:
-        "You are an accurate assistant. Always include a source URL if possible."
-
+      content: "You are an accurate assistant. Always include a source URL if possible."
     },
     {
       role: "system",
@@ -50,7 +77,7 @@ serve(async (req: Request): Promise<Response> => {
     },
     {
       role: "user",
-      content: body.query,
+      content: query,
     },
   ];
 
@@ -63,6 +90,7 @@ serve(async (req: Request): Promise<Response> => {
     body: JSON.stringify({
       model: "gpt-4o",
       messages,
+      max_tokens: MAX_RESPONSE_TOKENS,
     }),
   });
 
@@ -76,18 +104,21 @@ serve(async (req: Request): Promise<Response> => {
     const qualtricsPayload = {
       values: {
         responseText: result,
-        queryText: body.query,
+        queryText: query,
       },
     };
 
-    const qt = await fetch(`https://${QUALTRICS_DATACENTER}.qualtrics.com/API/v3/surveys/${QUALTRICS_SURVEY_ID}/responses`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-API-TOKEN": QUALTRICS_API_TOKEN,
+    const qt = await fetch(
+      `https://${QUALTRRICS_DATACENTER}.qualtrics.com/API/v3/surveys/${QUALTRICS_SURVEY_ID}/responses`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-TOKEN": QUALTRICS_API_TOKEN,
+        },
+        body: JSON.stringify(qualtricsPayload),
       },
-      body: JSON.stringify(qualtricsPayload),
-    });
+    );
 
     qualtricsStatus = `Qualtrics status: ${qt.status}`;
   }
