@@ -1,97 +1,67 @@
-Syllabus Bot Template
-A modular, copyable bot for answering course or assignment-related questions using OpenAI. Designed to embed into Brightspace and optionally log responses to Qualtrics.
+# Syllabus Bot (OpenAI, Deno)
 
-What It Does
+Minimal bot that answers course/assignment questions using OpenAI with `syllabus.md` as context. Embeds in Brightspace and can optionally log to Qualtrics.
 
-* Accepts free-text questions 
-* Uses OpenAI to generate responses based on syllabus.md
-* Optionally logs responses to a Qualtrics survey
-* Can be embedded in Brightspace or hosted via GitHub Pages
+## Features
+- Accepts free-text questions
+- Calls OpenAI with `syllabus.md`
+- Optionally logs `{queryText, responseText}` to Qualtrics
+- Works as a standalone web page or Brightspace embed
 
-How to Use
+## 1. Create your copy
+- Use this template on GitHub (e.g., `syllabus-bot-3210`, `paragraph-marker`)
 
-1. Create Your Own Copy
+## 2. Replace syllabus content
+- Edit `syllabus.md` with your course policies or grading criteria (this text is sent with each query)
 
-* Go to [https://github.com/dbousfie/syllabus-bot-template]
-* Click **Use this template**
-* Name your new repo (e.g., `syllabus-bot-3210`, `paragraph-marker`)
+## 3. Deploy backend to Deno
+- Sign in at https://dash.deno.com → **+ New Project** → **Import from GitHub**
+- Select your repo
+- Entry point: `main.ts`
+- Production branch: `main`
+- Create the project (you'll get a `https://<name>.deno.dev` URL)
 
-2. Replace the Syllabus Content
+## 4. Add environment variables
+In **Deno → Settings → Environment Variables**, add:
 
-* Open `syllabus.md`
-* Replace its contents with your course material or grading criteria
-* This file is sent with every query to provide context to the AI
+    OPENAI_API_KEY=your OpenAI API key
+    SYLLABUS_LINK=public link to the syllabus or course webpage
+    QUALTRICS_API_TOKEN=(optional)
+    QUALTRICS_SURVEY_ID=(optional)
+    QUALTRICS_DATACENTER=(optional, e.g., uwo.eu)
+    OPENAI_MODEL=(optional, default gpt-4o-mini)
 
-3. Deploy Backend to Deno
+## 5. Point the frontend to your backend
+In `index.html`, replace the fetch URL with your Deno URL, e.g.:
 
-* Go to [https://dash.deno.com] and sign up or log in using your GitHub account. This is required so Deno can access your repository and deploy from it directly.
-* Click **+ New Project** → **Import from GitHub**
-* Select your new repo
-* Set **entry point** to: `main.ts`
-* Name the project (this determines the public URL)
-* Set **production branch** to: `main`
-* Click **Create Project**
+    fetch("https://your-app-name.deno.dev/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: userQuery })
+    });
 
-4. Add Environment Variables
-   In the Deno project Settings → Environment Variables, add:
+## 6. Host the frontend (GitHub Pages)
+- Repo → **Settings → Pages**
+- Branch: `main`, Folder: `/ (root)` → **Save**
+- Use the published URL (e.g., `https://yourusername.github.io/yourbot/`)
+- For Brightspace, you can also paste `brightspace.html` as a content item or widget
 
-```
-OPENAI_API_KEY         = your OpenAI API key
-SYLLABUS_LINK          = a public link to the syllabus or course webpage
-QUALTRICS_API_TOKEN    = (optional)
-QUALTRICS_SURVEY_ID    = (optional)
-QUALTRICS_DATACENTER   = (optional, e.g., uwo.eu)
-```
+## Notes
+- CORS headers are returned by `main.ts`, so the Brightspace iframe can call your backend.
+- Each deployment has its own backend; ensure the frontend fetch URL matches the correct Deno project.
+- Responses are capped at **1500 tokens**; increase `max_tokens` in `main.ts` if you need longer answers.
+- Hitting OpenAI usage/quota limits may surface as a generic server error—retry or switch to a cheaper model via `OPENAI_MODEL`.
 
-These values are used by the backend to query OpenAI and optionally log responses.
+## Qualtrics (optional)
+- In your survey, add embedded data fields: `responseText`, `queryText`.
+- The response includes an HTML comment like `<!-- Qualtrics status: 200 -->` to confirm logging.
 
-5. Update the Frontend (index.html)
-   Open `index.html` and update this line:
+## Files
+- `index.html` — public interface
+- `brightspace.html` — LMS-friendly wrapper
+- `main.ts` — Deno backend (OpenAI API)
+- `syllabus.md` — syllabus/grading text used as context
+- `README.md` — this file
 
-```js
-fetch("https://your-bot-name.deno.dev/", {
-```
-
-Replace the placeholder with the URL from your deployed Deno backend (e.g., `https://paragraph-marker.deno.dev/`).
-
-This is the only required change to link your frontend to your backend.
-
-6. Deploy GitHub Pages (Frontend Hosting)
-
-* Go to your new GitHub repo → **Settings → Pages**
-* Set **Branch** to `main`, **Folder** to `/ (root)`
-* Click **Save**
-* GitHub will display a live URL: `https://yourusername.github.io/yourbot/`
-
-7. (Optional) Use brightspace.html for LMS Embedding
-
-* Copy `brightspace.html` into Brightspace as an HTML content item or widget
-* You can also style it using Brightspace's Lato font or CSS styles
-
-Notes
-
-* Brightspace loads bots in an iframe — CORS headers are handled automatically
-* Each deployed bot has its own backend; the fetch URL must match
-
-Qualtrics Logging Setup (Optional)
-If using Qualtrics, make sure your survey contains embedded data fields:
-
-```
-responseText
-queryText
-```
-
-These will be populated by the bot. Responses will include a hidden HTML comment like:
-`<!-- Qualtrics status: 200 -->`
-
-Files in This Repo
-
-* `index.html` - Main public interface
-* `brightspace.html` - LMS-friendly iframe wrapper
-* `main.ts` - Backend Deno script
-* `syllabus.md` - Syllabus or grading criteria context
-* `README.md` - This file
-
-License
-© Dan Bousfield. Licensed under Creative Commons Attribution 4.0
-[https://creativecommons.org/licenses/by/4.0/](https://creativecommons.org/licenses/by/4.0/)
+## License
+© Dan Bousfield. CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
