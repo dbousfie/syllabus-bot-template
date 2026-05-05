@@ -1,0 +1,31 @@
+Cloudflare Worker Env Vars — Setup Checklist
+=============================================
+
+Where: dash.cloudflare.com → your worker → Settings → Variables and Secrets
+Tip:   Click "Edit" (next to "+ Add") to set multiple at once.
+
+Name                    Type      Notes
+----------------------  --------  ----------------------------------------
+OPENAI_API_KEY          Secret    sk-...
+QUALTRICS_API_TOKEN     Secret    from Qualtrics → Account Settings → API
+QUALTRICS_SURVEY_ID     Text      SV_... (from the survey URL)
+QUALTRICS_DATACENTER    Text      uwo.eu
+COURSE_PAGE_URL         Text      https://westernu.brightspace.com/d2l/...
+SYLLABUS_URL            Text      https://raw.githubusercontent.com/dbousfie/<REPO>/main/syllabus.md
+OPENAI_MODEL            Text      gpt-4o-mini  (optional, defaults if unset)
+
+
+Per-bot values to update:
+  - SYLLABUS_URL: change <REPO> to this bot's repo name
+  - COURSE_PAGE_URL: the Brightspace link for this course
+  - OPENAI_API_KEY: per-bot key if tracking costs separately
+
+Same across all bots (paste from this file):
+  - QUALTRICS_API_TOKEN
+  - QUALTRICS_DATACENTER
+  - (QUALTRICS_SURVEY_ID may also be shared if you reuse one survey)
+
+
+Reminder for index.html:
+  Update WORKER_URL near the top of the script to:
+  https://<this-bot-name>.danbousfield.workers.dev/

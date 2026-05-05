@@ -22,40 +22,95 @@
       border: 1px solid #ccc;
       max-width: 600px;
     }
+    #feedback {
+      margin-top: 0.5rem;
+      max-width: 600px;
+      font-size: 0.95rem;
+    }
+    #feedback button {
+      font-size: 1rem;
+      margin-right: 0.5rem;
+      padding: 0.3rem 0.8rem;
+      cursor: pointer;
+      border: 1px solid #999;
+      background: white;
+    }
+    #feedback button:hover {
+      background: #eee;
+    }
   </style>
 </head>
 <body>
-  <h2>Sample Syllabus Query Page</h2>
+  <h2>Syllabus Query Page - for questions about the course and things relating to the syllabus</h2>
   <form id="queryForm">
     <textarea name="query" id="query" rows="5" cols="60" placeholder="Type your question here..."></textarea><br />
     <button type="submit">Submit</button>
   </form>
   <h3>Response:</h3>
- <h5> all queries and responses are anonymously recorded by qualitrics for feedback, research and improvement</h5>
+  <h5>All queries and responses are anonymously recorded by qualtrics for feedback, research and improvement.</h5>
   <pre id="response"></pre>
+  <div id="feedback"></div>
 
   <script>
+    // CHANGE THIS to your bot's Cloudflare worker URL
+    const WORKER_URL = "https://3201bot.danbousfield.workers.dev/";
+
     const form = document.getElementById("queryForm");
     const responseBox = document.getElementById("response");
+    const feedbackBox = document.getElementById("feedback");
+
+    let lastQuery = "";
+    let lastResponse = "";
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       responseBox.textContent = "Loading...";
+      feedbackBox.innerHTML = "";
       const query = document.getElementById("query").value;
+      lastQuery = query;
 
       try {
-        const res = await fetch("https://syllabus-bot.deno.dev/", {
+        const res = await fetch(WORKER_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ query }),
         });
-
         const text = await res.text();
         responseBox.textContent = text;
+        lastResponse = text;
+        showFeedbackButtons();
       } catch (err) {
         responseBox.textContent = "Error contacting server.";
       }
     });
+
+    function showFeedbackButtons() {
+      feedbackBox.innerHTML =
+        '<span>Was this helpful? </span>' +
+        '<button data-feedback="helpful">👍 Yes</button>' +
+        '<button data-feedback="not_helpful">👎 No</button>';
+      feedbackBox.querySelectorAll("button").forEach(b => {
+        b.addEventListener("click", () => sendFeedback(b.dataset.feedback));
+      });
+    }
+
+    async function sendFeedback(value) {
+      feedbackBox.textContent = "Sending...";
+      try {
+        await fetch(WORKER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            query: lastQuery,
+            responseText: lastResponse,
+            feedback: value,
+          }),
+        });
+        feedbackBox.textContent = "Thanks for your feedback!";
+      } catch {
+        feedbackBox.textContent = "Could not send feedback.";
+      }
+    }
   </script>
 </body>
 </html>
